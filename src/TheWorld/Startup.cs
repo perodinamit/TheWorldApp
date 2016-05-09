@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using TheWorld.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.PlatformAbstractions;
+using TheWorld.Models;
 
 namespace TheWorld
 {
@@ -30,6 +31,9 @@ namespace TheWorld
         {
             //dodajemo MVC u projekt
             services.AddMvc();
+
+            //include DB
+            services.AddEntityFramework().AddSqlServer().AddDbContext<WorldContext>();
 
 #if DEBUG
             services.AddScoped<IMailService, DebugMailService>();
