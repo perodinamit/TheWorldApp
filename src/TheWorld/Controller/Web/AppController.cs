@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TheWorld.Models;
 using TheWorld.Services;
 using TheWorld.ViewModels;
 
@@ -12,15 +13,18 @@ namespace TheWorld.Controles.Web
     public class AppController : Controller
     {
         private IMailService _mailservice;
+        private WorldContext _context;
 
-        public AppController(IMailService service) //constructor
+        public AppController(IMailService service, WorldContext context) //constructor
         {
             _mailservice = service;
+            _context = context;
         }
 
         public IActionResult Index()
         {
-            return View();
+            var trips = _context.Trips.OrderBy(t => t.Name).ToList();
+            return View(trips);
         }
 
         public IActionResult About()
