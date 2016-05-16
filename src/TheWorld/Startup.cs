@@ -10,6 +10,8 @@ using TheWorld.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.PlatformAbstractions;
 using TheWorld.Models;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Serialization;
 
 namespace TheWorld
 {
@@ -30,12 +32,19 @@ namespace TheWorld
         public void ConfigureServices(IServiceCollection services)
         {
             //dodajemo MVC u projekt
-            services.AddMvc();
+            services.AddMvc().AddJsonOptions( opt =>
+            {
+                opt.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            });
+
+            //Add logging
+            services.AddLogging();
 
             //include DB
             services.AddEntityFramework().AddSqlServer().AddDbContext<WorldContext>();
 
             services.AddTransient<WorldContextSeedData>();
+            services.AddScoped<IWorldRepository, WorldRepository>();
 
 
 #if DEBUG
@@ -47,8 +56,10 @@ namespace TheWorld
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, WorldContextSeedData seeder)
+        public void Configure(IApplicationBuilder app, WorldContextSeedData seeder, ILoggerFactory loggerFactory)
         {
+            loggerFactory.AddDebug(LogLevel.Warning);
+
               app.UseStaticFiles();
 
             //tu "palimo" MVC
