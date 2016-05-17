@@ -19,6 +19,12 @@ namespace TheWorld.Models
             _loger = logger;
         }
 
+        public void AddTrip(Trip newTrip)
+        {
+            _context.Add(newTrip);
+
+        }
+
         public IEnumerable<Trip> GetAllTrips()
         {
             try {
@@ -45,6 +51,11 @@ namespace TheWorld.Models
                 return null;
             }
 
+        }
+
+        public bool SaveAll()
+        {
+           return _context.SaveChanges() > 0;
         }
     }
 }

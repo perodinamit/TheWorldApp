@@ -12,6 +12,8 @@ using Microsoft.Extensions.PlatformAbstractions;
 using TheWorld.Models;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Serialization;
+using AutoMapper;
+using TheWorld.ViewModels;
 
 namespace TheWorld
 {
@@ -60,7 +62,12 @@ namespace TheWorld
         {
             loggerFactory.AddDebug(LogLevel.Warning);
 
-              app.UseStaticFiles();
+            app.UseStaticFiles();
+
+            Mapper.Initialize(config =>
+            {
+                config.CreateMap<Trip, TripViewModel>().ReverseMap();
+            });
 
             //tu "palimo" MVC
             app.UseMvc(config =>
